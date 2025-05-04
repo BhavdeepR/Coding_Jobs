@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+    <section class="section">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-6">
+                    <div class="box has-shadow has-text-centered">
+                        <h1 class="title has-text-danger">Delete Job</h1>
+                        <p class="mb-4">Are you sure you want to delete the job <strong>{{ job.title }}</strong>? This action cannot be undone.</p>
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="button is-danger mr-2">Yes, Delete</button>
+                            <a href="{% url 'view_dashboard_job' job.id %}" class="button is-light">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %} 

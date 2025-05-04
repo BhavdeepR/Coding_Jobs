@@ -16,7 +16,7 @@
                                 <div class="field">
                                     <label class="label">{{ field.label }}</label>
                                     <div class="control has-icons-left">
-                                        {{ field }}
+                                        <input class="input" type="{% if field.name == 'password1' or field.name == 'password2' %}password{% else %}text{% endif %}" name="{{ field.name }}" placeholder="{{ field.label }}" required>
                                         <span class="icon is-small is-left">
                                             <i class="fas fa-{% if field.name == 'username' %}user{% elif field.name == 'password1' or field.name == 'password2' %}lock{% else %}envelope{% endif %}"></i>
                                         </span>

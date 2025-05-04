@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 
 from .forms import AddJobForm, ApplicationForm
-from .models import Job
+from .models import Job, Application
 
 from apps.notification.utilities import create_notification
 
@@ -19,7 +20,7 @@ def apply_for_job(request, job_id):
     job = Job.objects.get(pk=job_id)
 
     if request.method == 'POST':
-        form = ApplicationForm(request.POST)
+        form = ApplicationForm(request.POST, request.FILES)
 
         if form.is_valid():
             application = form.save(commit=False)
@@ -28,6 +29,7 @@ def apply_for_job(request, job_id):
             application.save()
 
             create_notification(request, job.created_by, 'application', extra_id=application.id)
+            messages.success(request, 'Your application has been submitted successfully!')
 
             return redirect('dashboard')
     else:
@@ -68,3 +70,12 @@ def edit_job(request, job_id):
         form = AddJobForm(instance=job)
     
     return render(request, 'job/edit_job.html', {'form': form, 'job': job})
+
+@login_required
+def delete_job(request, job_id):
+    job = get_object_or_404(Job, pk=job_id, created_by=request.user)
+    if request.method == 'POST':
+        job.delete()
+        messages.success(request, 'Job deleted successfully!')
+        return redirect('dashboard')
+    return render(request, 'job/delete_job_confirm.html', {'job': job})

@@ -1,44 +1,80 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-    <h1 class="title">View application</h1>
-
-    <h2 class="subtitle">{{ application.job.title }}</h2>
-
-    <small>Date added: {{ application.created_at }}</small>
-
-    <p><strong>Content: </strong><br>{{ application.content }}</p>
-    <p><strong>Experience: </strong><br>{{ application.experience }}</p>
-
-    <hr>
-
-    <h2 class="subtitle">Conversation</h2>
-
-    {% for message in application.conversationmessages.all %}
-        <div class="notification">
-            <b>{{ message.created_by.username }} - {{ message.created_at|timesince }} ago</b><br>
-
-            {{ message.content }}
-        </div>
-    {% empty %}
-        <p>No messages yet...</p>
-
-        <hr>
-    {% endfor %}
-    
-    <form method="post" action=".">
-        {% csrf_token %}
-
-        <div class="field">
-            <div class="control">
-                <textarea class="textarea" placeholder="Your message" name="content" id="id_content"></textarea>
+    <section class="section">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-8">
+                    {% if job_deleted %}
+                        <div class="notification is-danger has-text-centered mb-5">
+                            The job associated with this application has been deleted.
+                        </div>
+                    {% else %}
+                        <div class="card mb-6" style="box-shadow: 0 2px 8px rgba(10,10,10,0.08); border-radius: 10px;">
+                            <div class="card-content has-text-centered" style="padding: 2rem;">
+                                <h2 class="title is-4 mb-2">{{ application.job.title }}</h2>
+                                <p class="mb-3">{{ application.job.description }}</p>
+                                <div class="is-size-7 has-text-grey mb-2">
+                                    <b>Company name:</b> {{ application.job.company_name }}<br>
+                                    <b>Company address:</b> {{ application.job.company_address }}<br>
+                                    <b>Company city:</b> {{ application.job.company_city }}<br>
+                                    <b>Company state:</b> {{ application.job.company_state }}<br>
+                                    <b>Company zipcode:</b> {{ application.job.company_zipcode }}<br>
+                                    <b>Company country:</b> {{ application.job.company_country }}<br>
+                                    <b>Company size:</b> {{ application.job.get_company_size_display }}<br>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="box has-shadow">
+                        <h1 class="title has-text-centered">Application Details</h1>
+                        <div class="content">
+                            <p class="has-text-grey">
+                                <small>Date applied: {{ application.created_at }}</small>
+                            </p>
+                            <div class="field">
+                                <label class="label">Resume</label>
+                                <div class="control">
+                                    {% if application.resume and application.resume.name %}
+                                        <a href="{{ application.resume.url }}" class="button is-primary" target="_blank">
+                                            <span class="icon">
+                                                <i class="fas fa-file-alt"></i>
+                                            </span>
+                                            <span>View Resume</span>
+                                        </a>
+                                    {% else %}
+                                        <span class="has-text-grey">No resume uploaded.</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <hr>
+                            <h2 class="subtitle">Conversation</h2>
+                            {% for message in application.conversationmessages.all %}
+                                <div class="notification">
+                                    <b>{{ message.created_by.username }} - {{ message.created_at|timesince }} ago</b><br>
+                                    {{ message.content }}
+                                </div>
+                            {% empty %}
+                                <p>No messages yet...</p>
+                                <hr>
+                            {% endfor %}
+                            <form method="post" action=".">
+                                {% csrf_token %}
+                                <div class="field">
+                                    <div class="control">
+                                        <textarea class="textarea" placeholder="Your message" name="content" id="id_content"></textarea>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="control">
+                                        <button class="button is-success">Send</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="field">
-            <div class="control">
-                <button class="button is-success">Send</button>
-            </div>
-        </div>
-    </form>
+    </section>
 {% endblock %}

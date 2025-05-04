@@ -16,16 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views
+from django.conf import settings
+from django.conf.urls.static import static
 
-from apps.core.views import frontpage, signup
+from apps.core.views import frontpage, signup, CustomLoginView
 
 urlpatterns = [
     path('', frontpage, name='frontpage'),
     path('signup/', signup, name='signup'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
-    path('login/', views.LoginView.as_view(template_name='core/login.html'), name='login'),
+    path('login/', CustomLoginView.as_view(), name='login'),
     path('admin/', admin.site.urls),
     path('dashboard/', include('apps.userprofile.urls')),
     path('notifications/', include('apps.notification.urls')),
     path('jobs/', include('apps.job.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

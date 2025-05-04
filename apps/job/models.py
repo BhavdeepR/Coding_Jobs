@@ -25,13 +25,12 @@ class Job(models.Model):
     )
 
     title = models.CharField(max_length=255)
-    short_description = models.TextField()
-    long_description = models.TextField(blank=True, null=True)
-
+    description = models.TextField()
     company_name = models.CharField(max_length=255)
     company_address = models.CharField(max_length=255, blank=True, null=True)
     company_zipcode = models.CharField(max_length=255, blank=True, null=True)
-    company_place = models.CharField(max_length=255, blank=True, null=True)
+    company_city = models.CharField(max_length=255, blank=True, null=True)
+    company_state = models.CharField(max_length=255, blank=True, null=True)
     company_country = models.CharField(max_length=255, blank=True, null=True)
     company_size = models.CharField(max_length=20, choices=CHOICES_SIZE, default=SIZE_1_9)
 
@@ -45,8 +44,9 @@ class Job(models.Model):
 
 class Application(models.Model):
     job = models.ForeignKey(Job, related_name='applications', on_delete=models.CASCADE)
-    content = models.TextField()
-    experience = models.TextField()
-
+    resume = models.FileField(upload_to='resumes/')
     created_by = models.ForeignKey(User, related_name='applications', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Application for {self.job.title} by {self.created_by.username}'

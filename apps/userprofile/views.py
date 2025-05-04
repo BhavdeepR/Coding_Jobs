@@ -16,6 +16,12 @@ def view_application(request, application_id):
     else:
         application = get_object_or_404(Application, pk=application_id, created_by=request.user)
     
+    job_deleted = False
+    try:
+        _ = application.job
+    except Job.DoesNotExist:
+        job_deleted = True
+
     if request.method == 'POST':
         content = request.POST.get('content')
 
@@ -26,7 +32,7 @@ def view_application(request, application_id):
 
             return redirect('view_application', application_id=application_id)
     
-    return render(request, 'userprofile/view_application.html', {'application': application})
+    return render(request, 'userprofile/view_application.html', {'application': application, 'job_deleted': job_deleted})
 
 @login_required
 def view_dashboard_job(request, job_id):

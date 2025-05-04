@@ -1,29 +1,52 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-    <h1 class="title">Dashboard</h1>
+    <div class="container">
+        <h1 class="title has-text-centered mb-4">Dashboard</h1>
 
-    {% if userprofile.is_employer %}
-        <h2 class="subtitle">Jobs</h2>
-
-        <a href="{% url 'add_job' %}" class="button is-success">Add job</a>
-
-        {% for job in request.user.jobs.all %}
-            <div class="job">
-                <a href="{% url 'view_dashboard_job' job.id %}">{{ job.title }} ({{ job.get_status_display }})</a>
+        {% if userprofile.is_employer %}
+            <div class="has-text-centered mb-6">
+                <a href="{% url 'add_job' %}" class="button is-success">Add job</a>
             </div>
-        {% empty %}
-            <p>You don't have any jobs yet...</p>
-        {% endfor %}
-    {% else %}
-        <h2 class="subtitle">Applications</h2>
-
-        {% for application in request.user.applications.all %}
-            <div class="application">
-                <a href="{% url 'view_application' application.id %}">{{ application.job.title }}</a>
+            <div class="columns is-multiline is-centered" style="max-width: 1200px; margin: 0 auto;">
+                {% for job in request.user.jobs.all %}
+                    <div class="column is-4-desktop is-6-tablet">
+                        <div class="card" style="box-shadow: 0 2px 8px rgba(10,10,10,0.08); border-radius: 10px;">
+                            <div class="card-content" style="padding: 2rem;">
+                                <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
+                                    <p class="title is-5 mb-0">{{ job.title }}</p>
+                                    <span class="tag is-info ml-3">{{ job.get_status_display }}</span>
+                                </div>
+                                <p class="is-size-7 has-text-grey mb-4">{{ job.short_description|truncatewords:15 }}</p>
+                                <a href="{% url 'view_dashboard_job' job.id %}" class="button is-link is-light is-fullwidth">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="column">
+                        <p>You don't have any jobs yet...</p>
+                    </div>
+                {% endfor %}
             </div>
-        {% empty %}
-            <p>You haven't applied for any jobs yet...</p>
-        {% endfor %}
-    {% endif %}
+        {% else %}
+            <h2 class="subtitle has-text-centered mb-6">Applications</h2>
+            <div class="columns is-multiline is-centered" style="max-width: 1200px; margin: 0 auto;">
+                {% for application in request.user.applications.all %}
+                    <div class="column is-4-desktop is-6-tablet">
+                        <div class="card" style="box-shadow: 0 2px 8px rgba(10,10,10,0.08); border-radius: 10px;">
+                            <div class="card-content" style="padding: 2rem;">
+                                <p class="title is-5 mb-3">{{ application.job.title }}</p>
+                                <p class="is-size-7 has-text-grey mb-4">Applied: {{ application.created_at|date:'M d, Y' }}</p>
+                                <a href="{% url 'view_application' application.id %}" class="button is-link is-light is-fullwidth">View Application</a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="column">
+                        <p>You haven't applied for any jobs yet...</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -1,24 +1,34 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-    <h1 class="title">{{ job.title }} ({{ job.get_status_display }})</h1>
-
-    <p class="is-size-4">{{ job.short_description }}</p>
-
-    <p>{{ job.long_description }}</p>
-
-    <b>Company name: </b>{{ job.company_name}}<br>
-    {% if job.company_address %}<b>Company address: </b>{{ job.company_address}}<br>{% endif %}
-    {% if job.company_zipcode %}<b>Company zipcode: </b>{{ job.company_zipcode}}<br>{% endif %}
-    {% if job.company_place %}<b>Company place: </b>{{ job.company_place}}<br>{% endif %}
-    {% if job.company_country %}<b>Company country: </b>{{ job.company_country}}<br>{% endif %}
-    <b>Company size: </b>{{ job.get_company_size_display }}<br>
-
-    <hr>
-
-    {% if job.status == 'active' %}
-        <a href="{% url 'apply_for_job' job.id %}" class="button is-success">Apply for job</a>
-    {% else %}
-        <p>This job is not available anymore!</p>
-    {% endif %}
+    <section class="section">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-8">
+                    <div class="card" style="box-shadow: 0 2px 8px rgba(10,10,10,0.08); border-radius: 10px;">
+                        <div class="card-content has-text-centered" style="padding: 2rem;">
+                            <h1 class="title is-3 mb-3">{{ job.title }} <span class="is-size-5 has-text-grey">({{ job.get_status_display }})</span></h1>
+                            <p class="is-size-5 mb-4">{{ job.description }}</p>
+                            <div class="is-size-6 has-text-grey mb-4" style="text-align: left; display: inline-block;">
+                                <b>Company name:</b> {{ job.company_name }}<br>
+                                <b>Company address:</b> {{ job.company_address }}<br>
+                                <b>Company city:</b> {{ job.company_city }}<br>
+                                <b>Company state:</b> {{ job.company_state }}<br>
+                                <b>Company zipcode:</b> {{ job.company_zipcode }}<br>
+                                <b>Company country:</b> {{ job.company_country }}<br>
+                                <b>Company size:</b> {{ job.get_company_size_display }}<br>
+                            </div>
+                            <div class="mt-5">
+                                {% if job.status == 'active' and not request.user.userprofile.is_employer %}
+                                    <a href="{% url 'apply_for_job' job.id %}" class="button is-success is-medium">Apply for job</a>
+                                {% elif job.status != 'active' %}
+                                    <p>This job is not available anymore!</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
