@@ -36,38 +36,30 @@
                 </div>
             </div>
 
-            <div class="field">
-                <label>Company address</label>
-                <div class="control">
-                    <input class="input" type="text" name="company_address" id="id_company_address" value="{{ job.company_address }}">
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label>Company city</label>
+                        <div class="control">
+                            <input class="input" type="text" name="company_city" id="id_company_city" value="{{ job.company_city }}">
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="field">
-                <label>Company zipcode</label>
-                <div class="control">
-                    <input class="input" type="text" name="company_zipcode" id="id_company_zipcode" value="{{ job.company_zipcode }}">
+                <div class="column">
+                    <div class="field">
+                        <label>Company state</label>
+                        <div class="control">
+                            {{ form.company_state }}
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="field">
-                <label>Company city</label>
-                <div class="control">
-                    <input class="input" type="text" name="company_city" id="id_company_city" value="{{ job.company_city }}">
-                </div>
-            </div>
-
-            <div class="field">
-                <label>Company state</label>
-                <div class="control">
-                    <input class="input" type="text" name="company_state" id="id_company_state" value="{{ job.company_state }}">
-                </div>
-            </div>
-
-            <div class="field">
-                <label>Company country</label>
-                <div class="control">
-                    <input class="input" type="text" name="company_country" id="id_company_country" value="{{ job.company_country }}">
+                <div class="column">
+                    <div class="field">
+                        <label>Company country</label>
+                        <div class="control">
+                            {{ form.company_country }}
+                        </div>
+                    </div>
                 </div>
             </div>
 

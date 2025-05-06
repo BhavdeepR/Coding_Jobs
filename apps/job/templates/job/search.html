@@ -9,15 +9,12 @@
                 <div class="column is-4">
                     <div class="field">
                         <label>Query</label>
-
                         <div class="control">
                             <input type="text" name="query" class="input" v-model="query">
                         </div>
                     </div>
-
                     <div class="field">
                         <label>Company size</label>
-
                         <div class="control">
                             <div class="select">
                                 <select name="company_size" v-model="company_size">
@@ -30,7 +27,86 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="field">
+                        <label>State</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="state" v-model="state">
+                                    <option value="" selected>All</option>
+                                    <option value="AL">Alabama</option>
+                                    <option value="AK">Alaska</option>
+                                    <option value="AZ">Arizona</option>
+                                    <option value="AR">Arkansas</option>
+                                    <option value="CA">California</option>
+                                    <option value="CO">Colorado</option>
+                                    <option value="CT">Connecticut</option>
+                                    <option value="DE">Delaware</option>
+                                    <option value="FL">Florida</option>
+                                    <option value="GA">Georgia</option>
+                                    <option value="HI">Hawaii</option>
+                                    <option value="ID">Idaho</option>
+                                    <option value="IL">Illinois</option>
+                                    <option value="IN">Indiana</option>
+                                    <option value="IA">Iowa</option>
+                                    <option value="KS">Kansas</option>
+                                    <option value="KY">Kentucky</option>
+                                    <option value="LA">Louisiana</option>
+                                    <option value="ME">Maine</option>
+                                    <option value="MD">Maryland</option>
+                                    <option value="MA">Massachusetts</option>
+                                    <option value="MI">Michigan</option>
+                                    <option value="MN">Minnesota</option>
+                                    <option value="MS">Mississippi</option>
+                                    <option value="MO">Missouri</option>
+                                    <option value="MT">Montana</option>
+                                    <option value="NE">Nebraska</option>
+                                    <option value="NV">Nevada</option>
+                                    <option value="NH">New Hampshire</option>
+                                    <option value="NJ">New Jersey</option>
+                                    <option value="NM">New Mexico</option>
+                                    <option value="NY">New York</option>
+                                    <option value="NC">North Carolina</option>
+                                    <option value="ND">North Dakota</option>
+                                    <option value="OH">Ohio</option>
+                                    <option value="OK">Oklahoma</option>
+                                    <option value="OR">Oregon</option>
+                                    <option value="PA">Pennsylvania</option>
+                                    <option value="RI">Rhode Island</option>
+                                    <option value="SC">South Carolina</option>
+                                    <option value="SD">South Dakota</option>
+                                    <option value="TN">Tennessee</option>
+                                    <option value="TX">Texas</option>
+                                    <option value="UT">Utah</option>
+                                    <option value="VT">Vermont</option>
+                                    <option value="VA">Virginia</option>
+                                    <option value="WA">Washington</option>
+                                    <option value="WV">West Virginia</option>
+                                    <option value="WI">Wisconsin</option>
+                                    <option value="WY">Wyoming</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Country</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="country" v-model="country">
+                                    <option value="" selected>All</option>
+                                    <option value="USA">United States</option>
+                                    <option value="CAN">Canada</option>
+                                    <option value="GBR">United Kingdom</option>
+                                    <option value="IND">India</option>
+                                    <option value="AUS">Australia</option>
+                                    <option value="DEU">Germany</option>
+                                    <option value="FRA">France</option>
+                                    <option value="BRA">Brazil</option>
+                                    <option value="SGP">Singapore</option>
+                                    <option value="OTHER">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="field">
                         <div class="control">
                             <button class="button is-success">Search</button>
@@ -40,19 +116,28 @@
             </div>
         </form>
 
-        <div v-if="jobs.length">
+        <div v-if="jobs.length > 0">
             <hr>
-
-            <div
-                v-for="job in jobs"
-                :key="job.id"
-                class="notification mt-2"
-            >
-                <h3 class="is-size-4">[[ job.title ]]</h3>
-                <p>[[ job.company_name ]]</p>
-
-                <a :href="job.url">View details</a>
+            <div class="columns is-multiline">
+                <div class="column is-4" v-for="job in jobs" :key="job.id">
+                    <div class="card mb-4">
+                        <header class="card-header">
+                            <p class="card-header-title">[[ job.title ]]</p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                                <strong>[[ job.company_name ]]</strong>
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            <a :href="job.url" class="card-footer-item">View details</a>
+                        </footer>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div v-else-if="loaded">
+            <p class="has-text-grey has-text-centered mt-6">No jobs found.</p>
         </div>
     </div>
 {% endblock %}
@@ -64,7 +149,10 @@
             return {
                 query: '',
                 company_size: '',
-                jobs: []
+                state: '',
+                country: '',
+                jobs: [],
+                loaded: false
             }
         },
         delimiters: ['[[', ']]'],
@@ -72,9 +160,11 @@
             performSearch() {
                 var data = {
                     'query': this.query,
-                    'company_size': this.company_size
+                    'company_size': this.company_size,
+                    'state': this.state,
+                    'country': this.country
                 }
-
+                console.log("Debug: Sending data to API:", data);
                 fetch('/jobs/api/search/', {
                     method: 'POST',
                     headers: {
@@ -83,20 +173,26 @@
                     },
                     body: JSON.stringify(data)
                 })
-                .then((response) => {
-                    return response.json()
-                })
+                .then((response) => response.json())
                 .then((result) => {
-                    console.log(result.jobs)
+                    console.log("Debug: API Response:", result);
                     this.jobs = result.jobs
+                    this.loaded = true
                 })
                 .catch((error) => {
                     console.log('Error', error)
                 })
             }
+        },
+        mounted() {
+            // Fetch 25 newest jobs on page load
+            this.performSearch();
         }
     }
-
-    Vue.createApp(SearchApp).mount('#search-app')
+    if (typeof Vue.createApp === 'function') {
+        Vue.createApp(SearchApp).mount('#search-app');
+    } else {
+        new Vue(SearchApp).$mount('#search-app');
+    }
 </script>
 {% endblock %}

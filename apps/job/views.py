@@ -29,12 +29,11 @@ def apply_for_job(request, job_id):
             application.save()
 
             create_notification(request, job.created_by, 'application', extra_id=application.id)
-            messages.success(request, 'Your application has been submitted successfully!')
-
-            return redirect('dashboard')
+            return redirect('view_application', application_id=application.id)
     else:
         form = ApplicationForm()
-    
+    if request.GET.get('submitted') == '1':
+        messages.success(request, 'Your application has been submitted successfully!')
     return render(request, 'job/apply_for_job.html', {'form': form, 'job': job})
 
 @login_required

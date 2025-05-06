@@ -23,7 +23,7 @@
                             <div class="field">
                                 <label class="label">Job Title</label>
                                 <div class="control">
-                                    <input class="input" type="text" name="title" id="id_title" v-model="title" placeholder="Enter job title">
+                                    <input class="input" type="text" name="title" id="id_title" placeholder="Enter job title">
                                 </div>
                             </div>
 
@@ -37,26 +37,11 @@
                             <div class="field">
                                 <label class="label">Company Name</label>
                                 <div class="control">
-                                    <input class="input" type="text" name="company_name" id="id_company_name" v-model="company_name" placeholder="Enter company name">
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <label class="label">Company Address</label>
-                                <div class="control">
-                                    <input class="input" type="text" name="company_address" id="id_company_address" placeholder="Enter company address">
+                                    <input class="input" type="text" name="company_name" id="id_company_name" placeholder="Enter company name">
                                 </div>
                             </div>
 
                             <div class="columns">
-                                <div class="column">
-                                    <div class="field">
-                                        <label class="label">Company Zipcode</label>
-                                        <div class="control">
-                                            <input class="input" type="text" name="company_zipcode" id="id_company_zipcode" placeholder="Enter zipcode">
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="column">
                                     <div class="field">
                                         <label class="label">Company City</label>
@@ -69,16 +54,17 @@
                                     <div class="field">
                                         <label class="label">Company State</label>
                                         <div class="control">
-                                            <input class="input" type="text" name="company_state" id="id_company_state" placeholder="Enter state">
+                                            {{ form.company_state }}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="field">
-                                <label class="label">Company Country</label>
-                                <div class="control">
-                                    <input class="input" type="text" name="company_country" id="id_company_country" placeholder="Enter country">
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label">Company Country</label>
+                                        <div class="control">
+                                            {{ form.company_country }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -86,7 +72,7 @@
                                 <label class="label">Company Size</label>
                                 <div class="control">
                                     <div class="select is-fullwidth">
-                                        <select name="company_size" v-model="company_size">
+                                        <select name="company_size">
                                             <option value="">Choose company size</option>
                                             <option value="size_1-9">1-9 employees</option>
                                             <option value="size_10-49">10-49 employees</option>
